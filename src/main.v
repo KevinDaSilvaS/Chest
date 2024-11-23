@@ -16,9 +16,9 @@ fn main() {
             cli.Command{
                 name:    'init'
                 execute: fn (cmd cli.Command) ! {
-                    if os.args.len >= 3 {
-						token := os.args[1]
-						password := os.args[2]
+                    if os.args.len >= 4 {
+						token := os.args[2]
+						password := os.args[1]
 						c.init(token, password)
 						return
 					}

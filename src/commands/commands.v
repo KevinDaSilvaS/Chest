@@ -17,13 +17,20 @@ pub fn help() {
 }
 
 pub fn init(token string, password string) {
+	log.info('Trying to create gist in github...')
+	res := stg.create_gist(token, password)
+	if res.failed {
+		log.error('Unable to create gist, setup failed')
+		return
+	}
+
 	log.info('Trying to create config file...')
-	if !stg.create_config_file(token, password) {
+	if !stg.create_config_file(res.gist_url, token, password) {
 		log.error('Unable to create config file, setup failed')
 		return
 	}
-	
-	log.info('Trying to create gist in github...')
+
+	log.debug('Chest configured with success')
 }
 
 pub fn put(key string, password string) {
