@@ -33,9 +33,7 @@ pub fn create_gist(token string, password string) h.ReturnGistResponse {
 		return h.ReturnGistResponse{ '', true } 
 	}
 
-	//println(res.body)
 	decoded_response := json.decode(h.GistCreationResponse, res.body) or {
-		println('FUUCK ${err}')
 		return h.ReturnGistResponse{ '', true } 
 	}
 
