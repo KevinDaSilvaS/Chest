@@ -18,8 +18,33 @@ fn main() {
                 execute: fn (cmd cli.Command) ! {
                     if os.args.len >= 4 {
 						token := os.args[2]
-						password := os.args[1]
+						password := os.args[3]
 						c.init(token, password)
+						return
+					}
+					c.help()
+                    return 
+                }
+            },
+			cli.Command{
+                name:    'get'
+                execute: fn (cmd cli.Command) ! {
+                    if os.args.len >= 3 {
+						password := os.args[2]
+						c.get(password)
+						return
+					}
+					c.help()
+                    return 
+                }
+            },
+			cli.Command{
+                name:    'put'
+                execute: fn (cmd cli.Command) ! {
+                    if os.args.len >= 4 {
+						key := os.args[2]
+						value := os.args[3]
+						c.put(key, value)
 						return
 					}
 					c.help()
