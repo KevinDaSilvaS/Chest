@@ -37,7 +37,30 @@ pub fn create_gist(token string, password string) h.ReturnGistResponse {
 		return h.ReturnGistResponse{ '', true } 
 	}
 
-	println(decoded_response)
-
 	return h.ReturnGistResponse{ decoded_response.url, false } 
+}
+
+pub fn list_passwords(password string) h.ReturnListPasswords {
+	data := os.read_file(path) or {
+		return h.ReturnListPasswords{[], true}
+	}
+
+	config := json.decode(h.Config, data) or {
+		return h.ReturnListPasswords{ [], true } 
+	}
+
+	if config.password != cr.hexhash(password) {
+		return h.ReturnListPasswords{ [], true }
+	}
+
+	tags := config.storage.keys()
+	passwords := config.storage.values()
+
+	mut formatted_passwords := []string{len: tags.len}
+	for i, tag in tags {
+		password_stored := b64.decode_str(passwords[i])
+		formatted_passwords << '$tag: $password_stored'
+	}
+
+	return h.ReturnListPasswords{formatted_passwords, false}
 }

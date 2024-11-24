@@ -38,5 +38,14 @@ pub fn put(key string, password string) {
 }
 
 pub fn get(password string) {
-	
+	res := stg.list_passwords(password)
+	if res.failed {
+		log.error('Unable to create gist, setup failed')
+		return
+	}
+
+	for pass in res.passwords {
+		println(pass)
+	}
+	return
 }

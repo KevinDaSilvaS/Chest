@@ -46,3 +46,9 @@ pub struct ReturnGistResponse {
 		gist_url string
 		failed bool
 }
+
+pub struct ReturnListPasswords {
+	pub:
+		passwords []string
+		failed bool
+}
