@@ -34,13 +34,23 @@ pub fn init(token string, password string) {
 }
 
 pub fn put(key string, password string) {
-	
+	if !stg.add_password_to_config(key, password) {
+		log.error('Unable to create password')
+		return
+	}
+
+	if !stg.add_password_to_gist(key, password) {
+		log.error('Unable to create password in gist, gonna try again later')
+	}
+
+	log.debug('New password added with success')
+	return
 }
 
 pub fn get(password string) {
 	res := stg.list_passwords(password)
 	if res.failed {
-		log.error('Unable to create gist, setup failed')
+		log.error('Unable to get passwords')
 		return
 	}
 

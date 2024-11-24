@@ -55,5 +55,4 @@ fn main() {
     }
     app.setup()
     app.parse(os.args)
-	println(os.args)
 }

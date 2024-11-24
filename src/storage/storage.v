@@ -64,3 +64,42 @@ pub fn list_passwords(password string) h.ReturnListPasswords {
 
 	return h.ReturnListPasswords{formatted_passwords, false}
 }
+
+pub fn add_password_to_gist(key string, password string) bool {
+	data := os.read_file(path) or { return false }
+
+	config := json.decode(h.Config, data) or { return false }
+	tags := config.storage.keys()
+	passwords := config.storage.values()
+
+	token := b64.decode_str(config.token)
+
+	mut formatted_passwords := 'CHEST_PASSWORD=$config.password|'
+	for i, tag in tags {
+		password_stored := b64.decode_str(passwords[i])
+		formatted_passwords = '$formatted_passwords$tag=$password_stored|'
+	}
+	body := '{"description":"Chest gist secrets","public":false,"files":{"chest.secrets":{"content":"$formatted_passwords"}}}'
+	mut req := http.new_request(http.Method.post, config.gist_url, body)
+
+	req.add_custom_header('Authorization', 'Bearer $token') or {}
+	req.add_custom_header('X-GitHub-Api-Version', '2022-11-28') or {}
+
+	req.do() or {
+		return false
+	}
+
+	return true
+}
+
+pub fn add_password_to_config(key string, password string) bool {
+	data := os.read_file(path) or { return false }
+
+	mut config := json.decode(h.Config, data) or { return false }
+
+	config.storage[key] = b64.encode_str(password)
+	json_config := json.encode(config)
+	os.write_file(path, json_config) or { return false }
+
+	return true
+}
